@@ -1,5 +1,6 @@
 EmailForwardParser
 =================
+[![Build Status](https://www.travis-ci.org/jeremymarc/EmailForwardParser.png?branch=master)](https://www.travis-ci.org/jeremymarc/EmailForwardParser)
 
 This is a small PHP library to parse forwarded email content, 
 inspired by [EmailReplyParser](https://github.com/willdurand/EmailReplyParser/).
