@@ -22,13 +22,15 @@ Simply call the read method with the email content like this:
 
 ```php
 <?php
-    $forward = EmailForwardParser::read($body);
+    $email = EmailForwardParser::read($body);
+    $from = $email->getFrom();
+    $to = $email->getTo();
 
-    $fromName = $forward['from']['name'];
-    $fromEmail = $forward['from']['email'];
-    $toName = $forward['to']['name'];
-    $toEmail = $forward['to']['email'];
-    $date = $forward['date']; //DateTime
-    $subject = $forward['subject'];
-    $body = $forward['body'];
+    $fromName = $from['name'];
+    $fromEmail = $from['email'];
+    $toName = $to['name'];
+    $toEmail = $to['email'];
+    $date = $email->getDate(); //DateTime
+    $subject = $email->getSubject();
+    $body = $email->getBody();
 ```
