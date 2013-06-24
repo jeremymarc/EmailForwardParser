@@ -3,6 +3,7 @@
 namespace EmailForwardParser\Tests;
 
 use EmailForwardParser\EmailForwardParser;
+use EmailForwardParser\Email;
 
 class EmailForwardParserTest extends TestCase
 {
@@ -15,16 +16,21 @@ class EmailForwardParserTest extends TestCase
     {
         $forward = EmailForwardParser::read(null);
 
-        $this->assertTrue(is_array($forward));
-        $this->assertEquals(5, count($forward));
+        $this->assertTrue($forward instanceof Email);
+        $this->assertEquals($forward->getBody(), '');
+        $this->assertEquals($forward->getSubject(), null);
+        $this->assertEquals($forward->getFrom(), array());
+        $this->assertEquals($forward->getTo(), array());
     }
 
     public function testReadWithEmptyContent()
     {
         $forward = EmailForwardParser::read('');
 
-        $this->assertTrue(is_array($forward));
-        $this->assertEquals(5, count($forward));
+        $this->assertTrue($forward instanceof Email);
+        $this->assertEquals($forward->getBody(), '');
+        $this->assertEquals($forward->getSubject(), null);
+        $this->assertEquals($forward->getTo(), array());
     }
 
     public function testParseForward()
@@ -32,12 +38,15 @@ class EmailForwardParserTest extends TestCase
         $body = $this->getFixtures('email_1.txt');
         $forward = EmailForwardParser::read($body);
 
-        $date = $forward['date'];
-        $this->assertEquals($forward['from']['email'], 'jeremy@test.com');
-        $this->assertEquals($forward['from']['name'], 'Jeremy Marc');
-        $this->assertEquals($forward['to']['email'], 'jeremy@test.com');
-        $this->assertEquals($forward['to']['name'], 'Jeremy Marc');
-        $this->assertEquals($forward['subject'], 'Test');
+        $date = $forward->getDate();
+        $from = $forward->getFrom();
+        $to = $forward->getTo();
+
+        $this->assertEquals($from['email'], 'jeremy@test.com');
+        $this->assertEquals($from['name'], 'Jeremy Marc');
+        $this->assertEquals($to['email'], 'jeremy@test.com');
+        $this->assertEquals($to['name'], 'Jeremy Marc');
+        $this->assertEquals($forward->getSubject(), 'Test');
         $this->assertEquals($date->format('Y-m-d'), '2013-03-22');
     }
 
@@ -46,9 +55,11 @@ class EmailForwardParserTest extends TestCase
         $body = $this->getFixtures('email_2.txt');
         $forward = EmailForwardParser::read($body);
 
-        $this->assertEquals($forward['from']['email'], 'jeremy@test.com');
-        $this->assertEquals($forward['from']['name'], '');
-        $this->assertEquals($forward['to']['email'], 'jeremy@test.com');
-        $this->assertEquals($forward['to']['name'], '');
+        $from = $forward->getFrom();
+        $to = $forward->getTo();
+        $this->assertEquals($from['email'], 'jeremy@test.com');
+        $this->assertEquals($from['name'], '');
+        $this->assertEquals($to['email'], 'jeremy@test.com');
+        $this->assertEquals($to['name'], '');
     }
 }

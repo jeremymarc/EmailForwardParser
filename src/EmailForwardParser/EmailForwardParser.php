@@ -14,8 +14,8 @@ class EmailForwardParser
 
     public static function read($text)
     {
-        $to = $from = array();
-        $date = $body = $subject = "";
+        $email = new Email();
+        $body = "";
 
         $lines = explode("\n", $text);
         foreach($lines as $line) {
@@ -26,10 +26,10 @@ class EmailForwardParser
                 if (0 === stripos($line, 'from:')) {
                     preg_match(self::FROM_REGEX, $line, $matches);
                     if (count($matches) > 2) {
-                        $from = array(
+                        $email->setFrom(array(
                             'name' => $matches[1],
                             'email' => $matches[2],
-                        );
+                        ));
                         continue;
                     }
                 }
@@ -37,10 +37,10 @@ class EmailForwardParser
                 if (0 === stripos($line, 'to:')) {
                     preg_match(self::TO_REGEX, $line, $matches);
                     if (count($matches) > 2) {
-                        $to = array(
+                        $email->setTo(array(
                             'name' => $matches[1],
                             'email' => $matches[2],
-                        );
+                        ));
                         continue;
                     }
                 }
@@ -48,7 +48,7 @@ class EmailForwardParser
                 if (0 === stripos($line, 'subject:')) {
                     preg_match(self::SUBJECT_REGEX, $line, $matches);
                     if (count($matches) > 1) {
-                        $subject = $matches[1];
+                        $email->setSubject($matches[1]);
                         continue;
                     }
                 }
@@ -58,6 +58,7 @@ class EmailForwardParser
                     if (count($matches) > 1) {
                         $date = new \DateTime();
                         $date->setTimestamp(strtotime($matches[1]));
+                        $email->setDate($date);
                         continue;
                     }
                 }
@@ -66,12 +67,8 @@ class EmailForwardParser
             }
         }
 
-        return array(
-            'from'    => $from,
-            'to'      => $to,
-            'subject' => $subject,
-            'date'    => $date,
-            'body'    => $body,
-        );
+        $email->setBody($body);
+
+        return $email;
     }
 }
