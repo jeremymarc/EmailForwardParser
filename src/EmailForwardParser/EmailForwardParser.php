@@ -7,9 +7,9 @@ class EmailForwardParser
     const DATE_REGEX = '/^Date:\s+(.*?)$/';
     const SUBJECT_REGEX = '/^Subject:\s+(.*?)$/';
 
-    const FROM_REGEX = '/^From:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
-    const TO_REGEX = '/^To:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
-    const CC_REGEX = '/^Cc:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
+    const FROM_REGEX = '/^From:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
+    const TO_REGEX = '/^To:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
+    const CC_REGEX = '/^Cc:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
 
     const REPLY_REGEX = '/^(>+)/s';
 
@@ -80,7 +80,7 @@ class EmailForwardParser
             }
         }
 
-        $email->setBody($body);
+        $email->setBody(trim($body));
 
         return $email;
     }
