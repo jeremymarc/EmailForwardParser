@@ -9,6 +9,7 @@ class EmailForwardParser
 
     const FROM_REGEX = '/^From:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
     const TO_REGEX = '/^To:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
+    const CC_REGEX = '/^Cc:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)(.*?)(?:[\]>])$/';
 
     const REPLY_REGEX = '/^(>+)/s';
 
@@ -44,6 +45,18 @@ class EmailForwardParser
                         continue;
                     }
                 }
+
+                if (0 === stripos($line, 'cc:')) {
+                    preg_match(self::CC_REGEX, $line, $matches);
+                    if (count($matches) > 2) {
+                        $email->setCc(array(
+                            'name' => $matches[1],
+                            'email' => $matches[2],
+                        ));
+                        continue;
+                    }
+                }
+
 
                 if (0 === stripos($line, 'subject:')) {
                     preg_match(self::SUBJECT_REGEX, $line, $matches);

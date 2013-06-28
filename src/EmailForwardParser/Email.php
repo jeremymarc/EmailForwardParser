@@ -6,6 +6,7 @@ class Email
 {
     private $from;
     private $to;
+    private $cc;
     private $subject;
     private $date;
     private $body;
@@ -56,6 +57,28 @@ class Email
     public function setTo($to)
     {
         $this->to = $to;
+
+        return $this;
+    }
+
+    /**
+     * Get cc.
+     *
+     * @return cc.
+     */
+    public function getCc()
+    {
+        return $this->cc;
+    }
+    
+    /**
+     * Set cc.
+     *
+     * @param cc the value to set.
+     */
+    public function setCc($cc)
+    {
+        $this->cc = $cc;
 
         return $this;
     }
