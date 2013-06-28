@@ -73,6 +73,7 @@ class EmailForwardParserTest extends TestCase
         $cc = $forward->getCc();
         $body = $forward->getBody();
 
+        var_dump($forward);
         $this->assertEquals($from['email'], 'jeremy@from.com');
         $this->assertEquals($from['name'], '');
         $this->assertEquals($to['email'], 'test@to.com');

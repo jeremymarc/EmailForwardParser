@@ -7,9 +7,9 @@ class EmailForwardParser
     const DATE_REGEX = '/^Date:\s+(.*?)$/';
     const SUBJECT_REGEX = '/^Subject:\s+(.*?)$/';
 
-    const FROM_REGEX = '/^From:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
-    const TO_REGEX = '/^To:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
-    const CC_REGEX = '/^Cc:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?(.*?)(?:[\]>])?$/';
+    const FROM_REGEX = '/^From:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?([^<>]*)(?:[\]>])?$/';
+    const TO_REGEX = '/^To:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?([^<>]*)(?:[\]>])?$/';
+    const CC_REGEX = '/^Cc:\s+["\']?(.*?)["\']?\s*(?:\[mailto:|<)?([^<>]*)(?:[\]>])?$/';
 
     const REPLY_REGEX = '/^(>+)/s';
 
@@ -26,7 +26,14 @@ class EmailForwardParser
 
                 if (0 === stripos($line, 'from:')) {
                     preg_match(self::FROM_REGEX, $line, $matches);
-                    if (count($matches) > 2) {
+                    if (($count = count($matches)) > 1) {
+                        if (2 == $count) {
+                            $email->setFrom(array(
+                                'name' => '',
+                                'email' => $matches[1],
+                            ));
+                            continue;
+                        }
                         $email->setFrom(array(
                             'name' => $matches[1],
                             'email' => $matches[2],
@@ -37,7 +44,14 @@ class EmailForwardParser
 
                 if (0 === stripos($line, 'to:')) {
                     preg_match(self::TO_REGEX, $line, $matches);
-                    if (count($matches) > 2) {
+                    if (($count = count($matches)) > 1) {
+                        if (2 == $count) {
+                            $email->setTo(array(
+                                'name' => '',
+                                'email' => $matches[1],
+                            ));
+                            continue;
+                        }
                         $email->setTo(array(
                             'name' => $matches[1],
                             'email' => $matches[2],
@@ -48,7 +62,14 @@ class EmailForwardParser
 
                 if (0 === stripos($line, 'cc:')) {
                     preg_match(self::CC_REGEX, $line, $matches);
-                    if (count($matches) > 2) {
+                    if (($count = count($matches)) > 1) {
+                        if (2 == $count) {
+                            $email->setCc(array(
+                                'name' => '',
+                                'email' => $matches[1],
+                            ));
+                            continue;
+                        }
                         $email->setCc(array(
                             'name' => $matches[1],
                             'email' => $matches[2],

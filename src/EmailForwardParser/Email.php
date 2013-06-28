@@ -15,6 +15,7 @@ class Email
     {
         $this->from = array();
         $this->to = array();
+        $this->cc = array();
     }
     
     /**
